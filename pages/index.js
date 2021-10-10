@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { db } from "../src/firebase";
 import "firebase/firestore";
 import Link from "next/link";
@@ -10,6 +10,8 @@ const Home = () => {
   const [todos, setTodos] = useState([]);
   const [tasks, setTasks] = useState([{ id: "", title: "" }]);
 
+  const inputRef = useRef(null);
+
   console.log(todos);
 
   const change = (e) => {
@@ -17,6 +19,8 @@ const Home = () => {
   };
 
   useEffect(() => {
+    inputRef.current.focus();
+
     const unSub = db.collection("tasks").onSnapshot((snapshot) => {
       setTasks(
         snapshot.docs.map((doc) => ({ id: doc.id, title: doc.data().title }))
@@ -44,10 +48,50 @@ const Home = () => {
     setTodo("");
   };
 
-const deleteTodo = (id) => {
-  const newTodos = todos.filter((todo) => todo.id !== id)
-  setTodos(newTodos)
-}
+  const deleteTodo = (id) => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+  };
+
+  const todoEdit = (id, editing) => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, editing: editing };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  };
+
+  const editCancel = (id, editing) => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, editing: editing };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  };
+
+  const chagneText = (edit, id) => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, text: edit };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  };
+
+  const editUpdate = (id, editing) => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, editing: editing };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  };
 
   return (
     <>
@@ -55,20 +99,38 @@ const deleteTodo = (id) => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
+          ref={inputRef}
           placeholder="todoを追加"
           value={todo}
           onChange={change}
         />
       </form>
 
-      {todos.map(({ id, text }) => {
+      {todos.map(({ id, text, editing }) => {
         return (
-          <>
-            <div style={{ display: "flex" }}>
-              <p key={id}>{text}</p>
-              <button onClick={() => deleteTodo(id)}>削除</button>
-            </div>
-          </>
+          <div key={id} style={{ display: "flex" }}>
+            {editing ? (
+              <>
+                <form>
+                  <input
+                    type="text"
+                    value={text}
+                    onChange={(e) => chagneText(e.target.value, id)}
+                  />
+                </form>
+                <button onClick={() => editUpdate(id, !editing)}>更新</button>
+                <button onClick={() => editCancel(id, !editing)}>
+                  編集キャンセル
+                </button>
+              </>
+            ) : (
+              <>
+                <p>{text}</p>
+                <button onClick={() => deleteTodo(id)}>削除</button>
+                <button onClick={() => todoEdit(id, !editing)}>編集</button>
+              </>
+            )}
+          </div>
         );
       })}
 
