@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { db } from "../src/firebase";
+import { db, firestore } from "../src/firebase";
 import "firebase/firestore";
 import Link from "next/link";
 import styled from "styled-components";
@@ -10,7 +10,6 @@ let nowId = 0;
 const Home = () => {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
-  const [tasks, setTasks] = useState([{ id: "", title: "" }]);
 
   const inputRef = useRef(null);
 
@@ -23,9 +22,9 @@ const Home = () => {
   useEffect(() => {
     inputRef.current.focus();
 
-    const unSub = db.collection("tasks").onSnapshot((snapshot) => {
-      setTasks(
-        snapshot.docs.map((doc) => ({ id: doc.id, title: doc.data().title }))
+    const unSub = db.collection("todos").onSnapshot((snapshot) => {
+      setTodos(
+        snapshot.docs.map((doc) => ({ id: doc.id, text: doc.data().text }))
       );
     });
     return () => unSub();
@@ -41,8 +40,19 @@ const Home = () => {
     const newTodos = [...todos, newTodo];
     setTodos(newTodos);
     nowId += 1;
+    firestoreAdd(newTodo);
   };
 
+  const firestoreAdd = async (newTodo) => {
+    db.collection("todos")
+      .doc()
+      .set({
+        text: newTodo.text,
+        editing: newTodo.editing,
+        completed: newTodo.completed,
+      });
+  };
+  
   const handleSubmit = (e) => {
     if (todo === "") return;
     e.preventDefault();
@@ -93,6 +103,7 @@ const Home = () => {
       return todo;
     });
     setTodos(newTodos);
+    firestoreUpdate();
   };
 
   return (
@@ -132,14 +143,6 @@ const Home = () => {
           </div>
         );
       })}
-
-      <div>
-        {tasks.map((task) => (
-          <Link href="/page1" key={task.id}>
-            <a style={{ margin: "4px" }}>{task.title}</a>
-          </Link>
-        ))}
-      </div>
     </>
   );
 };
