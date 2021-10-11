@@ -3,6 +3,8 @@ import { db } from "../src/firebase";
 import "firebase/firestore";
 import Link from "next/link";
 import styled from "styled-components";
+import CardList from "../src/components/CardList";
+import Filter from "../src/components/Filter";
 
 let nowId = 0;
 const Home = () => {
@@ -73,7 +75,7 @@ const Home = () => {
     setTodos(newTodos);
   };
 
-  const chagneText = (edit, id) => {
+  const changeText = (id, edit) => {
     const newTodos = todos.map((todo) => {
       if (todo.id === id) {
         return { ...todo, text: edit };
@@ -106,29 +108,26 @@ const Home = () => {
         />
       </form>
 
-      {todos.map(({ id, text, editing }) => {
+      {todos.map((todo) => {
         return (
-          <div key={id} style={{ display: "flex" }}>
-            {editing ? (
-              <>
-                <form>
-                  <input
-                    type="text"
-                    value={text}
-                    onChange={(e) => chagneText(e.target.value, id)}
-                  />
-                </form>
-                <button onClick={() => editUpdate(id, !editing)}>更新</button>
-                <button onClick={() => editCancel(id, !editing)}>
-                  編集キャンセル
-                </button>
-              </>
+          <div key={todo.id} style={{ display: "flex" }}>
+            {todo.editing ? (
+              <Filter
+                id={todo.id}
+                text={todo.text}
+                editing={todo.editing}
+                changeText={changeText}
+                editCancel={editCancel}
+                editUpdate={editUpdate}
+              />
             ) : (
-              <>
-                <p>{text}</p>
-                <button onClick={() => deleteTodo(id)}>削除</button>
-                <button onClick={() => todoEdit(id, !editing)}>編集</button>
-              </>
+              <CardList
+                id={todo.id}
+                text={todo.text}
+                editing={todo.editing}
+                todoEdit={todoEdit}
+                deleteTodo={deleteTodo}
+              />
             )}
           </div>
         );
