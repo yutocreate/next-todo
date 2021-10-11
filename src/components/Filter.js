@@ -8,9 +8,9 @@ const Filter = (props) => {
     changeText(id, e.target.value)
   }
 
-  const update = () => {
-    const {id, editing, editUpdate} = props
-    editUpdate(id, !editing)
+  const update = (e) => {
+    const {id, editing, editUpdate,text} = props
+    editUpdate(id, !editing, text)
   }
 
   const cancel = () => {
