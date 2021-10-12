@@ -1,4 +1,5 @@
 import React from "react";
+import { Button, ButtonGroup } from "@chakra-ui/react"
 
 const Filter = (props) => {
   const {text} = props
@@ -27,8 +28,10 @@ const Filter = (props) => {
           onChange={change}
         />
       </form>
-      <button onClick={update}>更新</button>
-      <button onClick={cancel}>編集キャンセル</button>
+      <ButtonGroup onClick={cancel} variant="outline" spacing="6">
+       <Button onClick={update} colorScheme="blue">更新</Button>
+      <Button style={{cursor: "pointer"}}>キャンセル</Button>
+      </ButtonGroup>
     </>
   );
 };

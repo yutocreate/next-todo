@@ -6,6 +6,10 @@ import styled from "styled-components";
 import CardList from "../src/components/CardList";
 import Filter from "../src/components/dynamic/Filter";
 
+
+
+import { ExternalLinkIcon } from '@chakra-ui/icons'
+
 let nowId = 0;
 const Home = () => {
   const [todo, setTodo] = useState("");
@@ -13,7 +17,7 @@ const Home = () => {
 
   const inputRef = useRef(null);
 
-  // console.log(todos);
+
 
   const change = (e) => {
     setTodo(e.target.value);
@@ -76,11 +80,13 @@ const Home = () => {
       </form>
       {todos.map((todo) => {
         return (
-          <div key={todo.id} style={{ display: "flex" }}>
+          <SP key={todo.id} style={{ display: "flex" }}>
             <Link href={`/posts/${todo.id}`}>
-              <a>{todo.text}</a>
+              <h1 style={{margin: 0}}>
+              <Sa>{todo.text}<ExternalLinkIcon mx="16px" /></Sa>
+              </h1>
             </Link>
-          </div>
+          </SP>
         );
       })}
     </>
@@ -93,6 +99,13 @@ const Sa = styled.a`
   display: flex;
   margin: 4px;
   cursor: pointer;
+  padding-left: 32px;
+  margin:0;
+`;
+
+const SP = styled.p`
+display:flex;
+margin: 0;
 `;
 
 export const getStaticProps = async () => {
