@@ -4,7 +4,7 @@ import "firebase/firestore";
 import Link from "next/link";
 import styled from "styled-components";
 import CardList from "../src/components/CardList";
-import Filter from "../src/components/Filter";
+import Filter from "../src/components/dynamic/Filter";
 
 let nowId = 0;
 const Home = () => {
@@ -60,58 +60,6 @@ const Home = () => {
     e.preventDefault();
     onSubmit(todo);
     setTodo("");
-  };
-
-  //Todoの削除
-  const deleteTodo = async (id) => {
-    await db.collection("todos").doc(id).delete();
-  };
-
-  //編集モードをオンにする
-  const todoEdit = (id, editing) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, editing: editing };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
-  };
-
-  //編集をキャンセルする
-  const editCancel = (id, editing) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, editing: editing };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
-  };
-
-  //編集の時にTodoのTextを変更する
-  const changeText = (id, edit) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, text: edit };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
-  };
-
-  //編集時の更新ボタンの挙動
-  const editUpdate = async (id, editing, text) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, editing: editing };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
-    await db.collection("todos").doc(id).update({
-      text: text,
-    });
   };
 
   return (
