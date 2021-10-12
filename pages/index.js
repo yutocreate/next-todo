@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { db, firestore } from "../src/firebase";
+import { db} from "../src/firebase";
 import "firebase/firestore";
 import Link from "next/link";
 import styled from "styled-components";
@@ -13,7 +13,7 @@ const Home = () => {
 
   const inputRef = useRef(null);
 
-  console.log(todos);
+  // console.log(todos);
 
   const change = (e) => {
     setTodo(e.target.value);
@@ -24,7 +24,12 @@ const Home = () => {
 
     const unSub = db.collection("todos").onSnapshot((snapshot) => {
       setTodos(
-        snapshot.docs.map((doc) => ({ id: doc.id, text: doc.data().text, editing: doc.data().editing, completed: doc.data().completed })),
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          text: doc.data().text,
+          editing: doc.data().editing,
+          completed: doc.data().completed,
+        }))
       );
     });
     return () => unSub();
@@ -59,7 +64,7 @@ const Home = () => {
 
   //Todoの削除
   const deleteTodo = async (id) => {
-    await db.collection('todos').doc(id).delete();
+    await db.collection("todos").doc(id).delete();
   };
 
   //編集モードをオンにする
@@ -95,31 +100,18 @@ const Home = () => {
     setTodos(newTodos);
   };
 
-  // const firestoreUpdate = async (id, newText) => {
-  //   const newTodos = todos.map((todo) => {
-  //     if(todo.id === id) {
-  //       return {...todo, text: newText}
-  //     }
-  //     return todo
-  //   })
-  //   setTodos(newTodos)
-  //   console.log(todos)
-  // }
-
   //編集時の更新ボタンの挙動
-  const editUpdate = async(id, editing,text ) => {
+  const editUpdate = async (id, editing, text) => {
     const newTodos = todos.map((todo) => {
       if (todo.id === id) {
-        return (
-          { ...todo, editing: editing }
-          );
-        }
-        return todo;
-      });
-      setTodos(newTodos);
-      await db.collection('todos').doc(id).update({
-        text: text
-    })
+        return { ...todo, editing: editing };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+    await db.collection("todos").doc(id).update({
+      text: text,
+    });
   };
 
   return (
@@ -170,3 +162,9 @@ const a = styled.a`
   margin: 4px;
   cursor: pointer;
 `;
+
+export const getStaticProps = async () => {
+  return {
+    props: {},
+  };
+};
