@@ -1,5 +1,8 @@
 import React from "react";
 
+import DeleteIcon from '@mui/icons-material/Delete';
+
+
 const CardList = (props) => {
   const { text } = props;
 
@@ -14,11 +17,11 @@ const CardList = (props) => {
   };
 
   return (
-    <>
-      {text}
-      <button onClick={remove}>削除</button>
+    <div style={{display: "flex"}}>
+      <h1>{text}</h1>
+      <DeleteIcon fontSize="large" onClick={remove}>削除</DeleteIcon>
       <button onClick={edit}>編集</button>
-    </>
+    </div>
   );
 };
 

@@ -1,15 +1,18 @@
 import { db } from "../../src/firebase";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import CardDetailButton from "../../src/components/dynamic/CardDetailButton";
 import Filter from "../../src/components/dynamic/Filter";
 
-const Post = ({ id }) => {
-  const [todos, setTodos] = useState([]);
-  console.log(todos);
+import { Button, ButtonGroup } from "@chakra-ui/react"
 
-  useEffect(() => {
-    const unSub = db.collection("todos").onSnapshot((snapshot) => {
+
+const Post = memo(({ id }) => {
+  const [todos, setTodos] = useState([]);
+
+
+  useEffect( async() => {
+    await db.collection("todos").onSnapshot((snapshot) => {
       setTodos(
         snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -18,12 +21,11 @@ const Post = ({ id }) => {
           completed: doc.data().completed,
         }))
       );
-    });
-    return () => unSub();
+    })
   }, []);
 
   //編集モードをオンにする
-  const todoEdit = (id, editing) => {
+  const todoEdit = async (id, editing) => {
     const newTodos = todos.map((todo) => {
       if (todo.id === id) {
         return { ...todo, editing: editing };
@@ -31,7 +33,7 @@ const Post = ({ id }) => {
       return todo;
     });
     setTodos(newTodos);
-  };
+  }
 
   //Todoの削除
   const deleteTodo = async (id) => {
@@ -50,15 +52,18 @@ const Post = ({ id }) => {
   };
 
   //編集をキャンセルする
-  const editCancel = (id, editing) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, editing: editing };
-      }
-      return todo;
+  const editCancel = async (id, editing,text) => {
+    await db.collection("todos").onSnapshot((snapshot) => {
+      setTodos(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          text: doc.data().text,
+          editing: doc.data().editing,
+          completed: doc.data().completed,
+        }))
+      );
     });
-    setTodos(newTodos);
-  };
+  }
 
   //編集時の更新ボタンの挙動
   const editUpdate = async (id, editing, text) => {
@@ -104,10 +109,10 @@ const Post = ({ id }) => {
           );
         } 
       })}
-      <Link href="/">Back</Link>
+      <Link href="/"><ButtonGroup><Button style={{cursor: "pointer", padding: "8px", marginTop: "8px"}}>Back</Button></ButtonGroup></Link>
     </>
   );
-};
+})
 
 export default Post;
 
