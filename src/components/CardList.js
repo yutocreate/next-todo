@@ -1,7 +1,8 @@
 import React from "react";
+import Link from "next/link"
 
 const CardList = (props) => {
-  const {text } = props;
+  const {id, text } = props;
 
   const edit = () => {
     const { id, editing, todoEdit } = props;
@@ -15,7 +16,7 @@ const CardList = (props) => {
 
   return (
     <>
-      <p>{text}</p>
+      <Link href={`/posts/${id}`}><a>{text}</a></Link>
       <button onClick={remove}>削除</button>
       <button onClick={edit}>編集</button>
     </>
