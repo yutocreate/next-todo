@@ -1,8 +1,8 @@
 import { db } from "../../src/firebase";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import CardDetailButton from "../../src/components/CardDetailButton";
-import Filter from "../../src/components/Filter";
+import CardDetailButton from "../../src/components/dynamic/CardDetailButton";
+import Filter from "../../src/components/dynamic/Filter";
 
 const Post = ({ id }) => {
   const [todos, setTodos] = useState([]);
@@ -22,6 +22,7 @@ const Post = ({ id }) => {
     return () => unSub();
   }, []);
 
+  //編集モードをオンにする
   const todoEdit = (id, editing) => {
     const newTodos = todos.map((todo) => {
       if (todo.id === id) {
@@ -32,6 +33,7 @@ const Post = ({ id }) => {
     setTodos(newTodos);
   };
 
+  //Todoの削除
   const deleteTodo = async (id) => {
     await db.collection("todos").doc(id).delete();
   };
