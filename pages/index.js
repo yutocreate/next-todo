@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { db} from "../src/firebase";
+import { db } from "../src/firebase";
 import "firebase/firestore";
 import Link from "next/link";
 import styled from "styled-components";
@@ -126,28 +126,12 @@ const Home = () => {
           onChange={change}
         />
       </form>
-
       {todos.map((todo) => {
         return (
           <div key={todo.id} style={{ display: "flex" }}>
-            {todo.editing ? (
-              <Filter
-                id={todo.id}
-                text={todo.text}
-                editing={todo.editing}
-                changeText={changeText}
-                editCancel={editCancel}
-                editUpdate={editUpdate}
-              />
-            ) : (
-              <CardList
-                id={todo.id}
-                text={todo.text}
-                editing={todo.editing}
-                todoEdit={todoEdit}
-                deleteTodo={deleteTodo}
-              />
-            )}
+            <Link href={`/posts/${todo.id}`}>
+              <a>{todo.text}</a>
+            </Link>
           </div>
         );
       })}
@@ -157,7 +141,7 @@ const Home = () => {
 
 export default Home;
 
-const a = styled.a`
+const Sa = styled.a`
   display: flex;
   margin: 4px;
   cursor: pointer;
