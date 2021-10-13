@@ -1,9 +1,5 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import {
-  signupWithEmailAndPassword,
-  signinWithEmailAndPassword,
-} from "../src/firebase/firebase";
 
 const Home = () => {
 

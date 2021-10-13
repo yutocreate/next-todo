@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { signinWithEmailAndPassword } from "../src/firebase/firebase";
+import Link from "next/link";
+
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -8,7 +10,6 @@ const Signin = () => {
   const signin = async (e) => {
     e.preventDefault();
     const user = await signinWithEmailAndPassword(email, password);
-    setUserr(user);
     // console.log(user.user.emailVerified)
     // setEmail('')
     // setPassword('')
@@ -40,6 +41,9 @@ const Signin = () => {
           <button type={"submit"}>ログイン</button>
         {/* )} */}
       </form>
+      <Link href="/page1">
+        <a>Todoへ</a>
+      </Link>
     </>
   );
 };

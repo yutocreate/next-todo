@@ -109,7 +109,7 @@ const Post = ({ id }) => {
       })}
       <ButtonGroup>
         <Button style={{ cursor: "pointer", padding: "8px", marginTop: "8px" }}>
-          <Link href="/">Back</Link>
+          <Link href="/page1">Back</Link>
         </Button>
       </ButtonGroup>
     </>
