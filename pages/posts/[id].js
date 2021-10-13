@@ -1,18 +1,16 @@
-import { db } from "../../src/firebase";
+import { db } from "../../src/firebase/firebase";
 import Link from "next/link";
 import React, { useState, useEffect, memo } from "react";
 import CardDetailButton from "../../src/components/dynamic/CardDetailButton";
 import Filter from "../../src/components/dynamic/Filter";
 
-import { Button, ButtonGroup } from "@chakra-ui/react"
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
-
-const Post = memo(({ id }) => {
+const Post = ({ id }) => {
   const [todos, setTodos] = useState([]);
 
-
-  useEffect( async() => {
-    await db.collection("todos").onSnapshot((snapshot) => {
+  useEffect(() => {
+    db.collection("todos").onSnapshot((snapshot) => {
       setTodos(
         snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -21,7 +19,7 @@ const Post = memo(({ id }) => {
           completed: doc.data().completed,
         }))
       );
-    })
+    });
   }, []);
 
   //編集モードをオンにする
@@ -33,7 +31,7 @@ const Post = memo(({ id }) => {
       return todo;
     });
     setTodos(newTodos);
-  }
+  };
 
   //Todoの削除
   const deleteTodo = async (id) => {
@@ -52,7 +50,7 @@ const Post = memo(({ id }) => {
   };
 
   //編集をキャンセルする
-  const editCancel = async (id, editing,text) => {
+  const editCancel = async (id, editing, text) => {
     await db.collection("todos").onSnapshot((snapshot) => {
       setTodos(
         snapshot.docs.map((doc) => ({
@@ -63,7 +61,7 @@ const Post = memo(({ id }) => {
         }))
       );
     });
-  }
+  };
 
   //編集時の更新ボタンの挙動
   const editUpdate = async (id, editing, text) => {
@@ -107,12 +105,16 @@ const Post = memo(({ id }) => {
               )}
             </div>
           );
-        } 
+        }
       })}
-      <Link href="/"><ButtonGroup><Button style={{cursor: "pointer", padding: "8px", marginTop: "8px"}}>Back</Button></ButtonGroup></Link>
+      <ButtonGroup>
+        <Button style={{ cursor: "pointer", padding: "8px", marginTop: "8px" }}>
+          <Link href="/">Back</Link>
+        </Button>
+      </ButtonGroup>
     </>
   );
-})
+};
 
 export default Post;
 
